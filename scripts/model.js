@@ -1,14 +1,22 @@
-function displayCard(card){
+/*
+ * Global variables and functions that are tied to handling API calls
+ */
+var search_list=[];
+var collection=[];
+//var search_card="";
+
+/*function displayCard(card){
 	
-	var txt=card.text;
-	var pic=card.image_path;
-	console.log(pic);
-    $("#card_data").text(txt);
-	$("#card_image").attr('src', pic);
+    var txt=card.name;
+    var pic=card.thumbnail_path;
+    $("#results_name").text(txt);
+    $(".search_results_img").attr('src', pic);
+    //console.log('cardToSearch is being called');
+    ygo_folder_app.updateCollection();
 
 }
 
-function getCard(name){
+/*function getCard(name){
 	
 	url='https://www.ygohub.com/api/card_info?name='+name;
 	console.log(url);
@@ -34,5 +42,4 @@ function getCard(name){
 			console.log(textStatus);
 		}
 	});
-}
-
+}*/

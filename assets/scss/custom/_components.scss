@@ -1,0 +1,13 @@
+
+.main-card-header {
+    max-height: $main-card-header-height;
+    height: $main-card-header-height;
+    min-height: $main-card-header-height;
+}
+
+.main-card-body {
+    max-height: $main-card-height;
+    height: $main-card-height;
+    min-height: $main-card-height;
+    overflow-y: auto;
+}

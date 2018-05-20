@@ -1,0 +1,7 @@
+// This file is specificaly for overwriting Bootstrap's variables.
+
+// It is in a different file than other variabes because of how Bootstrap handes
+// variable overwrite.
+
+// In the main Sass import file, this should be the ONLY custom import to come
+// before the Bootstrap framework imports.

@@ -1,0 +1,7 @@
+// All custom variables go here for the sake of easy finding and adjusting
+
+// Variables for the cards that constitute the main parts of the layout
+
+$main-card-header-height: calc(4rem-2px); //38px
+$navbar-height: 10rem; //currently estamated. A proper calculation to follow
+$main-card-height: calc(100vh - 11rem); //Full screen minus heights of navbar and card headers
