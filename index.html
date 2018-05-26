@@ -15,16 +15,13 @@
     <link rel="stylesheet" href="assets/ygo-folder_style_master.css">
     
     <!-- External Scripts -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>    
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
-<script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-<!-- Internal Scripts -->
-<script src="scripts/model.js"></script>
-<script src="scripts/controller.js"></script>
-<script src="scripts/services.js"></script>
-
+    <!-- Internal Scripts -->
+    <script src="scripts/controller.js"></script>
     
 </head>
 
@@ -101,10 +98,10 @@
                 <ul class="list-group list-group-flush main-card-body search-card-body">
                 
                     <!-- Begin search card results -->
-                    <li class="list-group-item search-result justify-content-between d-flex" ng-repeat="card in c.search_list">
-                        <img class="search_results_img" src="{{card.thumbnail_path}}" />
+                    <li class="list-group-item search-result justify-content-between d-flex" ng-repeat="card in c.search_list.cards track by card.number">
+                        <img class="search_results_img" id="img-{{$index}}" src="{{card.thumbnail_path}}" />
                         <span class="search_results_name">{{card.name}}</span>
-                        <button class="search_results_button btn btn-outline-success" ng-click="c.add_to_collection(card)">+</button>
+                        <button class="search_results_button btn btn-outline-success" ng-click="c.add_to_collection(card, c.collections[c.current_collection])">+</button>
                                        
                     </li> 
                     <li class="list-group-item"></li>
@@ -135,11 +132,32 @@
 
                     <!-- Begin collection card navigation -->
                     <ul class="nav nav-tabs collection-nav-tabs card-header-tabs mt-2">
-                    
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Collection</a>
+                        <li class="nav-item dropdown">
+                            
+                            <a class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#" 
+                               role="button" aria-haspopup="true" aria-expanded="false">Collections</a>
+                            
+                            <!-- Dropdown menu -->
+                            <div class="dropdown-menu">
+                                <!-- Options for importing, exporting, and mass entry -->
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#mass_entry">Mass Card Entry</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#import_modal">Import Collection</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#export_modal">Export Collection</a>
+
+                                <div class="dropdown-divider"></div>
+                                
+                                <!-- List of user's collections -->
+                                <a class="dropdown-item" href="#" 
+                                   ng-repeat="collection in c.collections track by index" 
+                                   data-position="collection-{{$index}}">{{collection.name}}</a>
+                                
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item" href="#">Add New Collection</a>
+
+                            </div>
                         </li>
-                        
+                                          
                         <li class="nav-item">
                             <a class="nav-link" href="#">Wishlist</a>
                         </li>
@@ -155,7 +173,7 @@
 
                 <!-- Begin collection card body -->
                 <div class="card-body main-card-body collection-card-body">
-                    <img ng-repeat="card in c.collection" src="{{card.thumbnail_path}}" />
+                    <img ng-repeat="card in c.collections[c.current_collection].cards track by $index" src="{{card.thumbnail_path}}" />
 
                 </div>
                 <!-- End collection card body -->
@@ -169,6 +187,31 @@
 </div>
 
 
+</div>
+
+<!-- Mass Entry Modal -->
+<div class="modal fade mass_entry" id="mass_entry" tabindex="-1" role="dialog" aria-labelledby="mass_entry" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="mass_entry_title">Mass Card Entry</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                
+                <p>Enter the exact names of your cards (case insensitive), separated by a comma</p>
+                
+                <textarea class="form-control" ng-model="c.import_cards"></textarea>
+            </div>
+            <div class="modal-footer">
+           
+                <button type="button" class="btn btn-success btn-sm" data-dismiss='modal' ng-click='c.mass_import_collection(c.import_cards, c.collections[c.current_collection])'>Import To Collection</button>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 
